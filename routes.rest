@@ -1,0 +1,39 @@
+//LOCALHOST
+###Get all the contacts
+GET http://localhost:3000/users
+
+
+###Get contact by Id
+GET http://localhost:3000/users/6529842d6dd048d47fb279b8
+
+
+### Create a new medical profile
+POST http://localhost:3000/users HTTP/1.1
+content-type: application/json
+
+{
+    "diagnosis": "BRONCHITIS",
+    "medication": "nebulisation",
+    "name": "Anthony",
+    "lastName": "Vos",
+    "place": "Maitland",
+    "quantity": "100ml",
+    "payment": "medical"
+}
+
+### PUT Medical profile update will update Terrence's info
+PUT http://localhost:3000/users/652983096dd048d47fb279b5 HTTP/1.1
+content-type: application/json
+
+{
+    "diagnosis": "Depression",
+    "medication": "Allergex",
+    "name": "Anna",
+    "lastName": "Marry",
+    "place": "Century",
+    "quantity": "10mg",
+    "payment": "eft"
+}
+
+### DELETE medical profile using the id number in this case its Sipho
+DELETE http://localhost:3000/users/652983ce6dd048d47fb279b7
