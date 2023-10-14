@@ -1,43 +1,27 @@
 const mongodb = require('../data/database');
 const ObjectId = require('mongodb').ObjectId;
 
-
-
-const getAll =  (req, res) => {
-    //swagger.tags=['Users']
-    mongodb
-    .getDatabase()
-    .db()
-    .collection('users')
-    .find()
-    .toArray((err, users) => {
-        if(err) {
-            res.status(400).json({message: err});
-        }
+const getAll = async (req, res) => {
+    const result = await mongodb.getDatabase().db().collection('users').find();
+    result.toArray().then((users) => {
         res.setHeader('Content-Type', 'application/json');
         res.status(200).json(users);
     });
 };
 
-const getSingle = (req, res) => {
-    //swagger.tags=['Users']
+const getSingle = async (req, res) => {
+    if (!ObjectId.isValid(req.params.id)) {
+        res.status(400).json('Must use a valid medical id to retrieve a profile.');
+    }
     const userId = new ObjectId(req.params.id);
-    mongodb
-    .getDatabase()
-    .db()
-    .collection('users')
-    .find({_id: userId})
-    .toArray((err, result) => {
-        if (err) {
-            res.status(400).json({message: err});
-        }
+    const result = await mongodb.getDatabase().db().collection('users').find({_id: userId});
+    result.toArray().then((users) => {
         res.setHeader('Content-Type', 'application/json');
-        res.status(200).json(result[0]);
+        res.status(200).json(users[0]);
     });
 };
 
 const createUser = async (req, res) => {
-    //swagger.tags=['Users']
     const user = {
         diagnosis: req.body.diagnosis,
         medication: req.body.medication,
@@ -56,7 +40,9 @@ const createUser = async (req, res) => {
 };
 
 const updateUser = async (req, res) => {
-    //swagger.tags=['Users']
+    if (!ObjectId.isValid(req.params.id)) {
+        res.status(400).json('Must use a valid medical id to update profile.');
+    }
     const userId = new ObjectId(req.params.id);
     const user = {
         diagnosis: req.body.diagnosis,
@@ -76,9 +62,11 @@ const updateUser = async (req, res) => {
 };
 
 const deleteUser = async (req, res) => {
-    //swagger.tags=['Users']
+    if (!ObjectId.isValid(req.params.id)) {
+        res.status(400).json('Must use a valid medical id to delete profile.');
+    }
     const userId = new ObjectId(req.params.id);
-    const response = await mongodb.getDatabase().db().collection('users').deleteOne({_id: userId });
+    const response = await mongodb.getDatabase().db().collection('users').delete({_id: userId });
     if (response.deletedCount > 0) {
         res.status(204).send();
     } else {
