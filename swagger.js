@@ -5,7 +5,7 @@ const doc ={
         title:'Health API',
         description: 'HEALTH API'
     },
-    host: 'localhost:3000',
+    host: 'localhost:3001',
     schemes: ['http']
 };
 
